@@ -10,9 +10,9 @@ N/A
 
 ## Usage
 
-Upon starting the application, this application accepts user input and can be used to view departments, roles, and employees, add a department/role/employee, and update an employee's role. The information shown also includes the employee's salary. 
+Upon starting the application, this application accepts user input and can be used to view departments, roles, and employees, add a department/ role/ employee, and/or update an employee's role. The information shown will also include the employee's salary. 
 
-[Link to Video with Employee Tracker walk-through]()
+[Link to Video with Employee Tracker Walk-through]()
 
 
 ![screenshot]()
