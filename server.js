@@ -18,14 +18,47 @@ const selectOption = () => {
                 'View All Departments',
                 'View All Roles',
                 'View All Employees',
-                'Add a Deparment',
+                'Add a Department',
                 'Add a Role',
                 'Add an Employee',
                 'Update an Employee Role',
             ]
         }
     ])
-        .then
+        .then(chosen) => {
+    const {choices} = chosen;
+    if (choices === 'View All Departments') {
+        viewAllDepts();
+    } else if (choices === 'View All Roles') {
+        viewAllRoles(); 
+    } else if (choices === 'View Employees') {
+        viewAllEmps();
+    }  else if (choices === 'Add a Department') {
+        addDept(); 
+    } else if (choices === 'Add a Role') {
+        addRole();
+    } else if (choices === 'Add an Employee') {
+        addEmp(); 
+    } else if (choices === 'Update an Employee Role') {
+        updateRole();
+    }
+
+    const viewAllDepts =
+
+    
+
+    // const viewAllRoles = 
+
+    // const viewAllEmps = 
+
+    // const addDept = 
+
+    // const addRole = 
+
+    // const addEmp =
+
+    // const updateRole = 
+
 }
 
 
