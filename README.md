@@ -12,7 +12,7 @@ N/A
 
 Upon starting the application, this application accepts user input and can be used to view departments, roles, and employees, add a department/ role/ employee, and/or update an employee's role. The information shown will also include the employee's salary. 
 
-[Link to Video with Employee Tracker Walk-through]()
+[Link to Video with Employee Tracker Walk-through](https://github.com/crcarmen23/employee-tracker)
 
 
 ![screenshot](./screenshot.jpg)

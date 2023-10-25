@@ -105,7 +105,7 @@ const addRole = () => {
             message: 'Please enter the department this role belongs to.',
         }
     ]).then(answer => {
-        db.query('INSERT INTO role SET ?', answer.title, function (err, results) {
+        db.query('INSERT INTO role (title, salary, department_id) VALUES ?', [answer.title, answer.salary, answer.name], function (err, results) {
             console.table(results);
             selectOption();
         });
