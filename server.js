@@ -1,12 +1,16 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+require('dotenv').config()
 
-const PORT = process.env.PORT || 3001;
-const app = express();
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
+const db = mysql.createConnection(
+    {
+        host: '127.0.0.1',
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
+    },
+    console.log(`Connected to the employees_db database.`)
+);
 
 const selectOption = () => {
     inquirer.prompt([
@@ -25,40 +29,124 @@ const selectOption = () => {
             ]
         }
     ])
-        .then(chosen) => {
-    const {choices} = chosen;
-    if (choices === 'View All Departments') {
-        viewAllDepts();
-    } else if (choices === 'View All Roles') {
-        viewAllRoles(); 
-    } else if (choices === 'View Employees') {
-        viewAllEmps();
-    }  else if (choices === 'Add a Department') {
-        addDept(); 
-    } else if (choices === 'Add a Role') {
-        addRole();
-    } else if (choices === 'Add an Employee') {
-        addEmp(); 
-    } else if (choices === 'Update an Employee Role') {
-        updateRole();
-    }
+        .then(chosen => {
+            const { options } = chosen;
+            console.log(options)
+            if (options === 'View All Departments') {
+                viewAllDepts();
+            } else if (options === 'View All Roles') {
+                viewAllRoles();
+            } else if (options === 'View All Employees') {
+                viewAllEmps();
+            } else if (options === 'Add a Department') {
+                addDept();
+            } else if (options === 'Add a Role') {
+                addRole();
+            } else if (options === 'Add an Employee') {
+                addEmp();
+            } else if (options === 'Update an Employee Role') {
+                updateRole();
+            }
+        })
+}
 
-    const viewAllDepts =
 
-    
 
-    // const viewAllRoles = 
+const viewAllDepts = () => {
+    db.query('SELECT * FROM department', function (err, results) {
+        console.table(results);
+        selectOption();
+    });
+}
 
-    // const viewAllEmps = 
+const viewAllRoles = () => {
+    db.query('SELECT role.id, role.title, role.salary, department.name FROM role JOIN department ON role.department_id=department.id', function (err, results) {
+        console.table(results);
+        selectOption();
+    });
+}
 
-    // const addDept = 
+const viewAllEmps = () => {
+    db.query('SELECT employee.id, employee.first_name, employee.last_name, role.salary, role.title, department.name, manager.first_name AS Manager FROM employee JOIN role ON role.id=employee.role_id JOIN department ON role.department_id=department.id JOIN employee manager ON manager.manager_id=employee.id', function (err, results) {
+        console.table(results);
+        selectOption();
+    });
+}
 
-    // const addRole = 
+const addDept = () => {
+    inquirer.prompt([
+        {
+            name: 'name',
+            type: 'input',
+            message: 'Please enter the name of the new department.',
+        }
+    ]).then(answer => {
+        db.query('INSERT INTO department SET ?', answer, function (err, results) {
+            console.table(results);
+            selectOption();
+        });
 
-    // const addEmp =
+    })
+}
 
-    // const updateRole = 
+const addRole = () => {
+    inquirer.prompt([
+        {
+            name: 'title',
+            type: 'input',
+            message: 'Please enter the title of the new role.',
+        }, {
+            name: 'salary',
+            type: 'input',
+            message: 'Please enter the salary for this new role.',
+        }, {
+            name: 'name',
+            type: 'input',
+            message: 'Please enter the department this role belongs to.',
+        }
+    ]).then(answer => {
+        db.query('INSERT INTO role SET ?', answer.title, function (err, results) {
+            console.table(results);
+            selectOption();
+        });
 
+    })
+}
+
+const addEmp = () => {
+    inquirer.prompt([
+        {
+            name: 'title',
+            type: 'input',
+            message: 'Please enter the name of the new employee.',
+        }
+    ]).then(answer => {
+        db.query('INSERT INTO employee SET ?', answer.title, function (err, results) {
+            console.table(results);
+            selectOption();
+        });
+
+    })
+}
+
+const updateRole = () => {
+    inquirer.prompt([
+        {
+            name: 'id',
+            type: 'input',
+            message: 'Please enter the id of the employee.',
+        }, {
+            name: 'role_id',
+            type: 'input',
+            message: 'Please enter the new role of the employee.',
+        },
+    ]).then(answer => {
+        db.query('UPDATE employee SET role_id = ? WHERE id = ?', [answer.role_id, answer.id], function (err, results) {
+            console.table(results);
+            selectOption();
+        });
+
+    })
 }
 
 
@@ -67,13 +155,5 @@ const selectOption = () => {
 
 
 
+selectOption();
 
-
-
-
-
-
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});

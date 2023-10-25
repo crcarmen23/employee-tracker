@@ -15,7 +15,7 @@ Upon starting the application, this application accepts user input and can be us
 [Link to Video with Employee Tracker Walk-through]()
 
 
-![screenshot]()
+![screenshot](./screenshot.jpg)
 
 
 ## Credits
