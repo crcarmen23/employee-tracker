@@ -90,27 +90,41 @@ const addDept = () => {
 }
 
 const addRole = () => {
-    inquirer.prompt([
-        {
-            name: 'title',
-            type: 'input',
-            message: 'Please enter the title of the new role.',
-        }, {
-            name: 'salary',
-            type: 'input',
-            message: 'Please enter the salary for this new role.',
-        }, {
-            name: 'name',
-            type: 'input',
-            message: 'Please enter the department this role belongs to.',
+    db.query('SELECT * FROM department', (err, results) => {
+        if (err) {
+            console.log(err)
         }
-    ]).then(answer => {
-        db.query('INSERT INTO role (title, salary, department_id) VALUES ?', [answer.title, answer.salary, answer.name], function (err, results) {
-            console.table(results);
-            selectOption();
-        });
+        console.log(results);
+        inquirer.prompt([
+            {
+                name: 'title',
+                type: 'input',
+                message: 'Please enter the title of the new role.',
+            }, {
+                name: 'salary',
+                type: 'input',
+                message: 'Please enter the salary for this new role.',
+            }, {
+                name: 'name',
+                type: 'list',
+                message: 'Please enter the department this role belongs to.',
+                choices: results.map((dept) => {
+                    return { name: dept.name, value: dept.id }
+                })
+            }
+        ]).then(answer => {
+            console.log(answer)
+            db.query('INSERT INTO role (title, salary, department_id) VALUES (?,?,?)', [answer.title, answer.salary, answer.name], function (err, results) {
+                if (err) {
+                    console.log(err)
+                }
+                console.table(results);
+                selectOption();
+            });
 
+        })
     })
+
 }
 
 const addEmp = () => {
