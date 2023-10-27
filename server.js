@@ -133,6 +133,13 @@ const addEmp = () => {
             console.log(err)
         }
         console.log(results);
+
+        db.query('SELECT * FROM role', (err, results2) => {
+            if (err) {
+                console.log(err)
+            }
+            console.log(results2); 
+
         inquirer.prompt([
             {
                 name: 'first_name',
@@ -143,27 +150,30 @@ const addEmp = () => {
                 type: 'input',
                 message: 'Please enter the last name of your new employee.',
             }, {
-                name: 'role',
-                type: 'input',
-                message: 'Please enter the role of your new employee.',
+                name: 'role_id',
+                type: 'list',
+                message: 'Please enter the title of your new employee.',
+                choices: results2.map((role)=> {
+                    return {name: role.title ,value: role.id }
+                })
             }, {
-                name: 'manager',
+                name: 'manager_id',
                 type: 'list',
                 message: 'Please enter the manager that this employee will report to.',
-                choices: results.map((dept) => {
-                    return { name: dept.name, value: dept.id }
+                choices: results.map((emp) => {
+                    return { name: `${emp.first_name} ${emp.last_name}`, value: emp.id }
                 })
             }
         ]).then(answer => {
             console.log(answer)
-            db.query('INSERT INTO employee (first_name, last_name, role, manager_id) VALUES (?,?,?,?)', [answer.first_name, answer.last_name, answer.role, answer.manage_id], function (err, results) {
+            db.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)', [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], function (err, results) {
                 if (err) {
                     console.log(err)
                 }
                 console.table(results);
                 selectOption();
             });
-
+        })
         })
     })
 
