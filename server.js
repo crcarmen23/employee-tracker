@@ -128,19 +128,45 @@ const addRole = () => {
 }
 
 const addEmp = () => {
-    inquirer.prompt([
-        {
-            name: 'title',
-            type: 'input',
-            message: 'Please enter the name of the new employee.',
+    db.query('SELECT * FROM employee', (err, results) => {
+        if (err) {
+            console.log(err)
         }
-    ]).then(answer => {
-        db.query('INSERT INTO employee SET ?', answer.title, function (err, results) {
-            console.table(results);
-            selectOption();
-        });
+        console.log(results);
+        inquirer.prompt([
+            {
+                name: 'first_name',
+                type: 'input',
+                message: 'Please enter the first name of your new employee.',
+            }, {
+                name: 'last_name',
+                type: 'input',
+                message: 'Please enter the last name of your new employee.',
+            }, {
+                name: 'role',
+                type: 'input',
+                message: 'Please enter the role of your new employee.',
+            }, {
+                name: 'manager',
+                type: 'list',
+                message: 'Please enter the manager that this employee will report to.',
+                choices: results.map((dept) => {
+                    return { name: dept.name, value: dept.id }
+                })
+            }
+        ]).then(answer => {
+            console.log(answer)
+            db.query('INSERT INTO employee (first_name, last_name, role, manager_id) VALUES (?,?,?,?)', [answer.first_name, answer.last_name, answer.role, answer.manage_id], function (err, results) {
+                if (err) {
+                    console.log(err)
+                }
+                console.table(results);
+                selectOption();
+            });
 
+        })
     })
+
 }
 
 const updateRole = () => {
